@@ -1,0 +1,21 @@
+<!-- templates/about/author.html -->
+{% extends "base.html" %}
+{% load static %}
+{% block head_title %}Об авторе проекта{% endblock %}
+{% block content %}
+<h1>Привет, меня зовут Бекенов Алмат!</h1>
+<div class="row">
+  <aside class="col-12 col-md-2">
+    <img src="{% static 'img/profile_photo.jpg' %}" class="rounded float-start" 
+      height='200' width='154'>
+  </aside>
+  <article class="col-12 col-md-5">
+    <p>Путь изучения Python начал с курса Инди-программирования на 
+      Stepic в мае 2022 г. Также есть небольшой опыт в вёрстке сайтов, 
+      благодаря учебному ресурсу freecodecamp.org я получил первый сертификат 
+      в сфере IT.
+    </p>
+  </article>
+</div>
+
+{% endblock %}

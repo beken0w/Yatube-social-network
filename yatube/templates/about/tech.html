@@ -1,0 +1,39 @@
+<!-- templates/about/tech.html -->
+{% extends "base.html" %}
+{% block head_title %}Технологии{% endblock %}
+{% block content %}
+<div class="row">
+  <h1>Информация о технологиях в данном проекте</h1>
+  <aside class="col-12 col-md-3">
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">
+        Python
+      </li>
+      <li class="list-group-item">
+        Django
+      </li>
+      <li class="list-group-item">
+        HTML
+      </li>
+      <li class="list-group-item">
+        CSS
+      </li>
+      <li class="list-group-item">
+        SQL
+      </li>
+    </ul>
+  </aside>
+  <article class="col-12 col-md-9">
+    <p>Социальная сеть Yatube создана для ведения блога. В проекте реализованы 
+      следующие функции:</p>
+    <ul>
+      <li>Регистрация</li>
+      <li>Восстановление по ссылке из почты и смена пароля</li>
+      <li>Создание и редактирование поста</li>
+      <li>Присвоение группы к постам</li>
+      <li>Просмотр записей автора</li>
+      <li>Просмотр записей группы</li>
+      <li>В будущем: подписка на авторов</li>
+  </article>
+</div>
+{% endblock %}

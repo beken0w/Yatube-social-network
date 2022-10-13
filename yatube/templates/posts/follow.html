@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block head_title %}
+Подписки автора: {{ request.user }}
+{% endblock %}
+
+{% block title %}
+<h1>Подписки автора: {{ request.user }}</h1>
+{% endblock %}
+
+{% block content %}
+  {% include 'posts/includes/switcher.html' %}
+  {% include 'posts/includes/post_cycle.html' %}
+  {% include 'posts/includes/paginator.html' %}
+{% endblock %}
