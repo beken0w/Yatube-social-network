@@ -1,13 +1,13 @@
 import shutil
 import tempfile
+
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import Client, TestCase, override_settings
 from django.urls import reverse
-from django.contrib.auth import get_user_model
-from django.test import TestCase, Client
-from posts.models import Post, Group
 from posts.forms import PostForm
+from posts.models import Comment, Group, Post
 
 small_gif = (
     b'\x47\x49\x46\x38\x39\x61\x02\x00'
@@ -20,12 +20,8 @@ uploaded = SimpleUploadedFile(
     name='small.gif',
     content=small_gif,
     content_type='image/gif')
-# Создаем временную папку для медиа-файлов;
-# на момент теста медиа папка будет переопределена
-TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
-# Для сохранения media-файлов в тестах будет использоваться
-# временная папка TEMP_MEDIA_ROOT, а потом мы ее удалим
 
+TEMP_MEDIA_ROOT = tempfile.mkdtemp(dir=settings.BASE_DIR)
 
 User = get_user_model()
 
@@ -36,6 +32,7 @@ class FormsTests(TestCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.user = User.objects.create_user(username='auth')
+        cls.non_author = User.objects.create_user(username='non_author')
         cls.group = Group.objects.create(
             title='title_for_test',
             slug='slug-test',
@@ -48,21 +45,24 @@ class FormsTests(TestCase):
             image=uploaded,
             id=80,
         )
+        cls.comment = Comment(
+            post=cls.post,
+            author=cls.non_author,
+            text='text_for_comment',
+        )
         cls.form = PostForm()
 
     @classmethod
     def tearDownClass(cls):
         super().tearDownClass()
-        # Модуль shutil - библиотека Python с удобными инструментами
-        # для управления файлами и директориями:
-        # создание, удаление, копирование, перемещение, изменение папок и
-        # файлов. Метод shutil.rmtree удаляет директорию и всё её содержимое
         shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
 
     def setUp(self):
         self.guest_client = Client()
         self.authorized_client = Client()
         self.authorized_client.force_login(self.user)
+        self.non_author_client = Client()
+        self.non_author_client.force_login(self.non_author)
 
     def test_create_post(self):
         """Проверка создания новой записи."""
@@ -135,3 +135,27 @@ class FormsTests(TestCase):
         )
         post_detail_obj = response_post_detail.context['post'].image
         self.assertEqual(post_detail_obj, 'posts/small.gif')
+
+    def test_image_has_correct_extension(self):
+        """Проверка расширения изображения."""
+        text_file = SimpleUploadedFile("assignment.txt", b"content")
+        form_data = {
+            'text': 'text_for_image_test',
+            'author': self.user,
+            'group': self.group.id,
+            'image': text_file,
+        }
+
+        response = self.authorized_client.post(
+            reverse('posts:post_create'),
+            data=form_data,
+            follow=True,
+        )
+        self.assertFormError(response, 'form', 'image',
+                             errors=['Загрузите правильное изображение. '
+                                     'Файл, который вы загрузили, поврежден '
+                                     'или не является изображением.'])
+
+    def test_comment_form(self):
+        """Проверка формы коммента."""
+        self.assertEqual(self.comment.text, 'text_for_comment')

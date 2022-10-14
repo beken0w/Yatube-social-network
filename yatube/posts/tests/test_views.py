@@ -1,15 +1,14 @@
-from string import ascii_letters
-from django.urls import reverse
-from django.contrib.auth import get_user_model
-from django.test import TestCase, Client
-from posts.models import Post, Group, Follow
-from django import forms
-from django.core.cache import cache
 import time
+from string import ascii_letters
 
-from yatube.settings import (AMOUNT_POSTS_ON_PAGE,
-                             AMOUNT_POSTS_ON_SECOND_PAGE)
+from django import forms
+from django.contrib.auth import get_user_model
+from django.core.cache import cache
+from django.test import Client, TestCase
+from django.urls import reverse
+from posts.models import Follow, Group, Post
 
+from yatube.settings import AMOUNT_POSTS_ON_PAGE, AMOUNT_POSTS_ON_SECOND_PAGE
 
 User = get_user_model()
 

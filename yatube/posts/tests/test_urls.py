@@ -1,9 +1,9 @@
 # posts/tests/test_urls.py
-from django.urls import reverse
 from django.contrib.auth import get_user_model
-from django.test import TestCase, Client
-from posts.models import Post, Group, Comment
 from django.core.cache import cache
+from django.test import Client, TestCase
+from django.urls import reverse
+from posts.models import Comment, Group, Post
 
 User = get_user_model()
 
@@ -67,11 +67,19 @@ class PostURLTests(TestCase):
             f'/posts/{self.post.id}/': 200,
             '/create/': 200,
             f'/posts/{self.post.id}/edit/': 200,
+            f'/posts/{self.post.id}/comment/': 302,
+            '/follow/': 200,
+            f'/profile/{self.user.username}/follow/': 302,
+            f'/profile/{self.user.username}/unfollow/': 302,
             '/unexisting_page/': 404,
         }
         auth_list = [
             '/create/',
             f'/posts/{self.post.id}/edit/',
+            f'/posts/{self.post.id}/comment/',
+            '/follow/',
+            f'/profile/{self.user.username}/follow/',
+            f'/profile/{self.user.username}/unfollow/',
         ]
         for url, status_code in dict_data.items():
             with self.subTest(url=url):
