@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.decorators.cache import cache_page
+# from django.views.decorators.cache import cache_page
 
 from yatube.settings import AMOUNT_POSTS_ON_PAGE
 
@@ -9,7 +9,7 @@ from .models import Follow, Group, Post, User
 from .utils import easy_paginator
 
 
-@cache_page(60 * 20)
+# @cache_page(60 * 0)
 def index(request):
     post_list = Post.objects.all()
     page_obj = easy_paginator(post_list, request, AMOUNT_POSTS_ON_PAGE)

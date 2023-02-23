@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load cache %}
 {% block head_title %}
 Это главная страница проекта Yatube
 {% endblock %}
@@ -9,7 +9,9 @@
 {% endblock %}
 
 {% block content %}
-  {% include 'posts/includes/switcher.html' %}
-  {% include 'posts/includes/post_cycle.html' %}
-  {% include 'posts/includes/paginator.html' %}
+  {% cache 300 cache_part %}
+    {% include 'posts/includes/switcher.html' %}
+    {% include 'posts/includes/post_cycle.html' %}
+    {% include 'posts/includes/paginator.html' %}
+  {% endcache %}
 {% endblock %}
