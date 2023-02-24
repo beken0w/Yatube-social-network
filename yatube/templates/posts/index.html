@@ -9,9 +9,7 @@
 {% endblock %}
 
 {% block content %}
-  {% cache 300 cache_part %}
-    {% include 'posts/includes/switcher.html' %}
-    {% include 'posts/includes/post_cycle.html' %}
-    {% include 'posts/includes/paginator.html' %}
-  {% endcache %}
+  {% include 'posts/includes/switcher.html' %}
+  {% include 'posts/includes/post_cycle.html' %}
+  {% include 'posts/includes/paginator.html' %}
 {% endblock %}
